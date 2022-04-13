@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./Post.css";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import imagePlaceholder from "../../../../assets/images/file-not-found.jpg";
-import { useThemeWithoutDefault } from "@mui/system";
 
 export const Post = ({
   title,
