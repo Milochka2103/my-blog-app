@@ -3,7 +3,11 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import './LogOut.css';
 
 export const LogOut = ({setIsLoggedIn}) => {
-  const logOut = () => setIsLoggedIn(false)
+  const logOut = () => {
+    localStorage.removeItem('isLoggedIn');
+    setIsLoggedIn(false)
+  };
+
   return (
     <section className="sidebarBottom">
       <button onClick={logOut}>

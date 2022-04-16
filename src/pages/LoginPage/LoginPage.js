@@ -1,19 +1,34 @@
-import './LoginPage.css'
+import { useRef } from 'react';
+import './LoginPage.css';
 
 export const LoginPage = ({setIsLoggedIn}) => {
-  const logIn = () => {
 
-    setIsLoggedIn(true)
+  {/* useRef - инициализирует экзмепляр */}
+  const loginRef = useRef();
+  const passwordRef = useRef();
+
+  const handleSubmit = () => {
+    {/* имитация авторизации */}
+    const userData = {
+      login: loginRef.current.value,
+      password: passwordRef.current.value
+    }
+
+    console.log(userData);
+
+    localStorage.setItem('isLoggedIn', true)
+
+    setIsLoggedIn(true);
   }
 
   return (
-    <form onSubmit={logIn} className="LoginForm">
+    <form onSubmit={handleSubmit} className="LoginForm">
       <h1>Authorization</h1>
       <div>
-        <input type="text" placeholder="Enter your login" name="login" required />
+        <input ref={loginRef} type="text" placeholder="Enter your login" name="login" required />
       </div>
       <div>
-        <input type="password" placeholder="Password" name="password" required />
+        <input ref={passwordRef} type="password" placeholder="Password" name="password" required />
       </div>
       <div>
         <button type='submit'>Sign in</button>
