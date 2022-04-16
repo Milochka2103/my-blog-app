@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import './App.css';
 import { MainBlock } from './components/MainBlock/MainBlock';
@@ -6,7 +5,9 @@ import { LoginPage } from './pages/LoginPage/LoginPage';
 
 function App() {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem('isLoggedIn') === 'true'
+  );
 
   return (
     <div className="App">
