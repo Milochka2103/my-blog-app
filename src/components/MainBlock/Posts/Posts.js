@@ -1,47 +1,57 @@
-import React from "react";
+import React, { useState} from "react";
 import { PostsHeader } from "./PostsHeader/PostsHeader";
 import "./Posts.css";
 import { Post } from "./Post/Post";
-import { POSTS } from "../../../Utils/constants";
-import { useState } from "react";
-import { setPostsToLocalStorage } from "../../../Utils/helpers";
+import { POSTS_URL } from "../../../Utils/constants";
 import { EditForm } from "./EditForm/EditForm";
+import { useFetchPosts } from "../../../Utils/hooks";
 
 export const Posts = () => {
-  const [blogPosts, setBlogPosts] = useState(
-    JSON.parse(localStorage.getItem("blogPosts")) || POSTS
-  );
+  const {blogPosts, setBlogPosts, isLoading, error} = useFetchPosts(POSTS_URL);
 
   const likePost = (pos) => {
     const updatedPosts = [...blogPosts];
-
     updatedPosts[pos].liked = !updatedPosts[pos].liked;
 
-    setPostsToLocalStorage(updatedPosts);
-
-    setBlogPosts(updatedPosts);
+    fetch(POSTS_URL + updatedPosts[pos].id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedPosts[pos]),
+    })
+      .then((res) => res.json())
+      .then((updatedPostFromServer) => {
+        updatedPosts[pos] = updatedPostFromServer;
+        setBlogPosts(updatedPosts);
+      })
+      .catch((error) => console.log(error));
   };
 
   const deletePost = (postId) => {
     const isDelete = window.confirm("Delete Post?");
 
     if (isDelete) {
-      const updatedPosts = blogPosts.filter((post) => {
-        return post.id !== postId;
-      });
-
-      setPostsToLocalStorage(updatedPosts);
-      setBlogPosts(updatedPosts);
+      fetch(POSTS_URL + postId, {
+        method: "DELETE",
+      })
+      .then(() => setBlogPosts(blogPosts.filter(post => post.id !== postId)))
+      .catch((error) => console.log(error))
     }
   };
 
   const [selectedPost, setSelectedPost] = useState({});
   const [showEditForm, setShowEditForm] = useState(false);
 
-  const selectPost = (pos) => {
-    setSelectedPost(blogPosts[pos]);
+
+  const selectPost = (post) => {
+    setSelectedPost(post);
     setShowEditForm(true);
   };
+
+  if (isLoading) return <h1>Getting a data...</h1>;
+
+  if (error) return <h1>{error.message}</h1>
 
   return (
     <div className="postsWrapper">
@@ -58,7 +68,7 @@ export const Posts = () => {
               image={post.image}
               likePost={() => likePost(pos)}
               deletePost={() => deletePost(post.id)}
-              selectPost={() => selectPost(pos)}
+              selectPost={() => selectPost(post)}
               key={post.id}
             />
           );

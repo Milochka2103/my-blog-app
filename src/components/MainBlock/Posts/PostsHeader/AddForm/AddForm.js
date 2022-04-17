@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import "./AddForm.css";
 import CancelIcon from '@mui/icons-material/Cancel';
-import { setPostsToLocalStorage } from "../../../../../Utils/helpers";
-import postImage from "../../../../../assets/images/cat-1.jpg";
+import { POSTS_URL } from "../../../../../Utils/constants";
 
 export const AddForm = ({setShowAddForm, blogPosts, setBlogPosts}) => {
 
@@ -21,19 +20,25 @@ export const AddForm = ({setShowAddForm, blogPosts, setBlogPosts}) => {
     e.preventDefault();
 
     const newPost = {
-      id: blogPosts.length + 1,
       title: postTitle,
       description: postDesc,
       liked: false,
-      image: postImage
+      image: blogPosts[0].image
     }
 
-    const updatedPosts = [...blogPosts, newPost];
-
-    setBlogPosts(updatedPosts);
-    setPostsToLocalStorage(updatedPosts);
-
-    setShowAddForm(false);
+    fetch(POSTS_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newPost)
+    })
+    .then(res => res.json())
+    .then(newPostFromServer => {
+      setBlogPosts([...blogPosts, newPostFromServer]);
+      setShowAddForm(false);
+    })
+    .catch(error => console.log(error))
   }
 
 

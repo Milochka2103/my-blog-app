@@ -33,3 +33,5 @@ export const POSTS = [
     liked: false,
   },
 ];
+
+export const POSTS_URL = 'https://625bd1c050128c570207cce6.mockapi.io/articles/';

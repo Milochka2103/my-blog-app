@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import "./EditForm.css";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { setPostsToLocalStorage } from "../../../../Utils/helpers";
+import { POSTS_URL } from "../../../../Utils/constants";
 
-export const EditForm = ({ setShowEditForm, selectedPost, setBlogPosts, blogPosts }) => {
+export const EditForm = ({
+  setShowEditForm,
+  selectedPost,
+  setBlogPosts,
+  blogPosts,
+}) => {
   const [postTitle, setPostTitle] = useState(selectedPost?.title);
   const [postDesc, setPostDesc] = useState(selectedPost?.description);
 
@@ -24,14 +29,24 @@ export const EditForm = ({ setShowEditForm, selectedPost, setBlogPosts, blogPost
       description: postDesc,
     };
 
-    const updatedPosts = blogPosts.map((post) => {
-      if (post.id === updatedPost.id) return updatedPost
-      return post
+    fetch(POSTS_URL + selectedPost.id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedPost),
     })
+      .then((res) => res.json())
+      .then(updatedPostFromServer => {
 
-    setBlogPosts(updatedPost);
-    setPostsToLocalStorage(updatedPosts)
-    setShowEditForm(false);
+        const updatedPosts = blogPosts.map((post) => {
+          if (post.id === updatedPostFromServer.id) return updatedPostFromServer;
+          return post;
+        });
+        setBlogPosts(updatedPosts);
+        setShowEditForm(false);
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
