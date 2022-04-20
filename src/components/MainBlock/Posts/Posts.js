@@ -1,13 +1,19 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { PostsHeader } from "./PostsHeader/PostsHeader";
 import "./Posts.css";
 import { Post } from "./Post/Post";
 import { POSTS_URL } from "../../../Utils/constants";
 import { EditForm } from "./EditForm/EditForm";
-import { useFetchPosts } from "../../../Utils/hooks";
 
-export const Posts = () => {
-  const {blogPosts, setBlogPosts, isLoading, error} = useFetchPosts(POSTS_URL);
+export const Posts = ({
+  title,
+  blogPosts,
+  isLoading,
+  setBlogPosts,
+  error,
+  isLikedPosts = false,
+}) => {
+  const likedPosts = blogPosts.filter((post) => post.liked);
 
   const likePost = (pos) => {
     const updatedPosts = [...blogPosts];
@@ -35,14 +41,15 @@ export const Posts = () => {
       fetch(POSTS_URL + postId, {
         method: "DELETE",
       })
-      .then(() => setBlogPosts(blogPosts.filter(post => post.id !== postId)))
-      .catch((error) => console.log(error))
+        .then(() =>
+          setBlogPosts(blogPosts.filter((post) => post.id !== postId))
+        )
+        .catch((error) => console.log(error));
     }
   };
 
   const [selectedPost, setSelectedPost] = useState({});
   const [showEditForm, setShowEditForm] = useState(false);
-
 
   const selectPost = (post) => {
     setSelectedPost(post);
@@ -51,15 +58,19 @@ export const Posts = () => {
 
   if (isLoading) return <h1>Getting a data...</h1>;
 
-  if (error) return <h1>{error.message}</h1>
+  if (error) return <h1>{error.message}</h1>;
 
   return (
     <div className="postsWrapper">
-      <PostsHeader setBlogPosts={setBlogPosts} blogPosts={blogPosts} />
+      <PostsHeader
+        title={title}
+        isLikedPosts={isLikedPosts}
+        setBlogPosts={setBlogPosts}
+        blogPosts={blogPosts}
+      />
 
       <section className="posts">
-        {/* map - чтобы пробежаться по массиву*/}
-        {blogPosts.map((post, pos) => {
+        {(isLikedPosts ? likedPosts : blogPosts).map((post, pos) => {
           return (
             <Post
               title={post.title}
