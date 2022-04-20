@@ -21,5 +21,5 @@ export const useFetchPosts = (url) => {
       })
   }, [url])
 
-  return { blogPosts, setBlogPosts, isLoading, error };
+  return { blogPosts, setBlogPosts, isLoading, error }
 };

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Post.css";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import imagePlaceholder from "../../../../assets/images/file-not-found.jpg";
+import imagePlaceholder from "../../../assets/images/file-not-found.jpg";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -14,7 +14,6 @@ export const Post = ({
   deletePost,
   selectPost
 }) => {
-  const [isLiked, setIsLiked] = useState(liked);
 
   const customFilling = liked ? "crimson" : "black";
 
@@ -29,14 +28,14 @@ export const Post = ({
         description
       )}
     </p>
-  );
+  )
 
   return (
     <div className="post">
       <img src={image} alt="post" />
       <h2>{title}</h2>
+      {finalDescription}
       <div className="actions">
-        <p>{finalDescription}</p>
         <button onClick={likePost} className="likeBtn">
           <FavoriteIcon style={{ fill: customFilling }} />
         </button>

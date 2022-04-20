@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./AddForm.css";
 import CancelIcon from '@mui/icons-material/Cancel';
-import { POSTS_URL } from "../../../../../Utils/constants";
+import { POSTS_URL } from "../../../../Utils/constants";
 
 export const AddForm = ({setShowAddForm, blogPosts, setBlogPosts}) => {
 

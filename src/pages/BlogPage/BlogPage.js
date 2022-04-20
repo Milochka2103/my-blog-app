@@ -1,16 +1,23 @@
-import React, { useState} from "react";
-import { PostsHeader } from "./PostsHeader/PostsHeader";
-import "./Posts.css";
+import React, { useState } from "react";
+import "./BlogPage.css";
 import { Post } from "./Post/Post";
-import { POSTS_URL } from "../../../Utils/constants";
 import { EditForm } from "./EditForm/EditForm";
-import { useFetchPosts } from "../../../Utils/hooks";
+import { POSTS_URL } from "../../Utils/constants";
+import { PostsHeader } from "./PostsHeader/PostsHeader";
 
-export const Posts = () => {
-  const {blogPosts, setBlogPosts, isLoading, error} = useFetchPosts(POSTS_URL);
+export const BlogPage = ({
+  title,
+  blogPosts,
+  isLoading,
+  setBlogPosts,
+  error,
+  isLikedPosts = false,
+}) => {
+  const likedPosts = blogPosts.filter((post) => post.liked);
 
   const likePost = (pos) => {
     const updatedPosts = [...blogPosts];
+
     updatedPosts[pos].liked = !updatedPosts[pos].liked;
 
     fetch(POSTS_URL + updatedPosts[pos].id, {
@@ -29,43 +36,42 @@ export const Posts = () => {
   };
 
   const deletePost = (postId) => {
-    const isDelete = window.confirm("Delete Post?");
+    const isDelete = window.confirm("Удалить пост?");
 
     if (isDelete) {
-      fetch(POSTS_URL + postId, {
-        method: "DELETE",
-      })
-      .then(() => setBlogPosts(blogPosts.filter(post => post.id !== postId)))
-      .catch((error) => console.log(error))
+      fetch(POSTS_URL + postId, { method: "DELETE" })
+        .then(() =>
+          setBlogPosts(blogPosts.filter((post) => post.id !== postId))
+        )
+        .catch((error) => console.log(error));
     }
   };
-
   const [selectedPost, setSelectedPost] = useState({});
   const [showEditForm, setShowEditForm] = useState(false);
-
-
   const selectPost = (post) => {
     setSelectedPost(post);
     setShowEditForm(true);
   };
-
-  if (isLoading) return <h1>Getting a data...</h1>;
-
-  if (error) return <h1>{error.message}</h1>
+  if (isLoading) return <h1>Получаем данные...</h1>;
+  if (error) return <h1>{error.message}</h1>;
 
   return (
     <div className="postsWrapper">
-      <PostsHeader setBlogPosts={setBlogPosts} blogPosts={blogPosts} />
+      <PostsHeader
+        title={title}
+        isLikedPosts={isLikedPosts}
+        setBlogPosts={setBlogPosts}
+        blogPosts={blogPosts}
+      />
 
       <section className="posts">
-        {/* map - чтобы пробежаться по массиву*/}
-        {blogPosts.map((post, pos) => {
+        {(isLikedPosts ? likedPosts : blogPosts).map((post, pos) => {
           return (
             <Post
               title={post.title}
               description={post.description}
               liked={post.liked}
-              image={post.image}
+              thumbnail={post.thumbnail}
               likePost={() => likePost(pos)}
               deletePost={() => deletePost(post.id)}
               selectPost={() => selectPost(post)}
@@ -74,6 +80,7 @@ export const Posts = () => {
           );
         })}
       </section>
+
       {showEditForm && (
         <EditForm
           selectedPost={selectedPost}
