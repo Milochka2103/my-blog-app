@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./EditForm.css";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { POSTS_URL } from "../../../../Utils/constants";
+import { POSTS_URL } from "../../../Utils/constants";
 
 export const EditForm = ({
   setShowEditForm,

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { PostsHeader } from "./PostsHeader/PostsHeader";
-import "./Posts.css";
+import "./BlogPage.css";
 import { Post } from "./Post/Post";
-import { POSTS_URL } from "../../../Utils/constants";
 import { EditForm } from "./EditForm/EditForm";
+import { POSTS_URL } from "../../Utils/constants";
+import { PostsHeader } from "./PostsHeader/PostsHeader";
 
-export const Posts = ({
+export const BlogPage = ({
   title,
   blogPosts,
   isLoading,
@@ -17,6 +17,7 @@ export const Posts = ({
 
   const likePost = (pos) => {
     const updatedPosts = [...blogPosts];
+
     updatedPosts[pos].liked = !updatedPosts[pos].liked;
 
     fetch(POSTS_URL + updatedPosts[pos].id, {
@@ -35,29 +36,23 @@ export const Posts = ({
   };
 
   const deletePost = (postId) => {
-    const isDelete = window.confirm("Delete Post?");
+    const isDelete = window.confirm("Удалить пост?");
 
     if (isDelete) {
-      fetch(POSTS_URL + postId, {
-        method: "DELETE",
-      })
+      fetch(POSTS_URL + postId, { method: "DELETE" })
         .then(() =>
           setBlogPosts(blogPosts.filter((post) => post.id !== postId))
         )
         .catch((error) => console.log(error));
     }
   };
-
   const [selectedPost, setSelectedPost] = useState({});
   const [showEditForm, setShowEditForm] = useState(false);
-
   const selectPost = (post) => {
     setSelectedPost(post);
     setShowEditForm(true);
   };
-
-  if (isLoading) return <h1>Getting a data...</h1>;
-
+  if (isLoading) return <h1>Получаем данные...</h1>;
   if (error) return <h1>{error.message}</h1>;
 
   return (
@@ -76,7 +71,7 @@ export const Posts = ({
               title={post.title}
               description={post.description}
               liked={post.liked}
-              image={post.image}
+              thumbnail={post.thumbnail}
               likePost={() => likePost(pos)}
               deletePost={() => deletePost(post.id)}
               selectPost={() => selectPost(post)}
@@ -85,6 +80,7 @@ export const Posts = ({
           );
         })}
       </section>
+
       {showEditForm && (
         <EditForm
           selectedPost={selectedPost}

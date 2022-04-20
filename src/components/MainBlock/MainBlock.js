@@ -1,10 +1,9 @@
-import { Posts } from "./Posts/Posts";
 import { Sidebar } from "./Sidebar/Sidebar";
 import "./MainBlock.css";
 import { Route } from "react-router-dom";
-import { Favourite } from "../../pages/Favourite/Favourite";
 import { POSTS_URL } from "../../Utils/constants";
 import { useFetchPosts } from "../../Utils/hooks";
+import { BlogPage } from '../../pages/BlogPage/BlogPage';
 
 export const MainBlock = ({ setIsLoggedIn }) => {
   const postsData = useFetchPosts(POSTS_URL);
@@ -14,11 +13,11 @@ export const MainBlock = ({ setIsLoggedIn }) => {
       <Sidebar setIsLoggedIn={setIsLoggedIn} />
       <main className="mainBlock">
         <Route exact path="/blog">
-          <Posts title="Posts" {...postsData} />
+          <BlogPage title="Posts" {...postsData} />
         </Route>
 
-        <Route exact path="/favourite" component={Favourite}>
-          <Posts title="Favourite posts" {...postsData} isLikedPosts />
+        <Route exact path='/favourite'>
+          <BlogPage title="Favourite posts" {...postsData} isLikedPosts />
         </Route>
 
       </main>

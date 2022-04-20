@@ -1,9 +1,8 @@
-import { useRef } from 'react';
+import { useRef } from "react";
 import { useHistory } from "react-router-dom";
-import './LoginPage.css';
+import "./LoginPage.css";
 
-export const LoginPage = ({setIsLoggedIn}) => {
-
+export const LoginPage = ({ setIsLoggedIn }) => {
   const loginRef = useRef();
   const passwordRef = useRef();
 
@@ -12,31 +11,36 @@ export const LoginPage = ({setIsLoggedIn}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const userData = {
-      login: loginRef.current.value,
-      password: passwordRef.current.value
-    }
-
-    console.log(userData);
-
-    localStorage.setItem('isLoggedIn', true)
+    localStorage.setItem("isLoggedIn", true);
 
     setIsLoggedIn(true);
-    history.push('/');
-  }
+    history.push("/");
+  };
 
   return (
     <form onSubmit={handleSubmit} className="LoginForm">
       <h1>Authorization</h1>
       <div>
-        <input ref={loginRef} type="text" placeholder="Enter your login" name="login" required />
+        <input
+          ref={loginRef}
+          type="text"
+          placeholder="Enter your login"
+          name="login"
+          required
+        />
       </div>
       <div>
-        <input ref={passwordRef} type="password" placeholder="Password" name="password" required />
+        <input
+          ref={passwordRef}
+          type="password"
+          placeholder="Password"
+          name="password"
+          required
+        />
       </div>
       <div>
-        <button type='submit'>Sign in</button>
+        <button type="submit">Sign in</button>
       </div>
     </form>
-  )
-}
+  );
+};

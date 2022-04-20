@@ -1,7 +1,7 @@
 import React from "react";
 import "./Post.css";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import imagePlaceholder from "../../../../assets/images/file-not-found.jpg";
+import imagePlaceholder from "../../../assets/images/file-not-found.jpg";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 

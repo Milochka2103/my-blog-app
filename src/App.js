@@ -12,7 +12,7 @@ function App() {
   return (
     <div className='App'>
       <Switch>
-        
+
         <Route exact path='/'>
           {isLoggedIn ? <Redirect to='/blog' /> : <Redirect to='/login' />}
         </Route>
@@ -32,8 +32,8 @@ function App() {
           ) : (
             <Redirect to='/login' />
           )}
-
         </Route>
+
       </Switch>
     </div>
   );
